@@ -3,6 +3,7 @@ import axios from 'axios';
 
 let shownNewsIds = [];
 
+    //Estrapola i dati eseguendo una chiamati all'API Haker News
     async function fetchNews() {
       try {
         // Ottieni gli ID di 500 news
@@ -25,23 +26,39 @@ let shownNewsIds = [];
 
         const newsDataArray = news.map(newsResponse => newsResponse.data);
 
-        // Mostra le news nella pagina
-        const newsContainer = document.getElementById('news');
-        newsDataArray.forEach(news => {
-          const data = (new Date(news.time * 1000)).toLocaleDateString();
-          const newsElement = document.createElement('div');
-          newsElement.className = 'news_box'
-          newsElement.innerHTML = `<p><a href="${news.url}" target="_blank">${news.title}</a></p><br><p>${data}</p>`;
-          newsContainer.appendChild(newsElement);
-        });
+        return newsDataArray;
 
       } catch (error) {
         console.error('Errore:', error);
+        
+        return [];
       }
     }
 
+    function renderNews(newsDataArray){
+      // Chima la funzione renderOneNews per ogni elemento dell'array
+        newsDataArray.forEach(renderOneNews);
+      }
+
+      //Crea e inserisce i dati in ogni news box
+      function renderOneNews(news){
+        const date = (new Date(news.time * 1000)).toLocaleDateString();
+        const newsElement = document.createElement('div');
+        newsElement.className = 'news_box'
+        newsElement.innerHTML = `<p><a href="${news.url}" target="_blank">${news.title}</a></p><br><p>${date}</p>`;
+        const newsContainer = document.getElementById('news');
+        newsContainer.appendChild(newsElement);
+      }
+      
+      //Salva i dati estrapolati dalla funzione fetchNews in un array
+      async function loadNews(){
+        const newsDataArray = await fetchNews();
+        renderNews(newsDataArray);
+      }
+
+      
     // Aggiungi un listener per il pulsante
-    document.getElementById('loadMore').addEventListener('click', fetchNews);
+    document.getElementById('loadMore').addEventListener('click', loadNews);
 
     // Carica le prime 10 news al caricamento della pagina
-    fetchNews();
+    loadNews();

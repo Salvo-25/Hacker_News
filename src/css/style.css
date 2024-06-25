@@ -62,6 +62,14 @@ p{
   cursor: pointer;
 }
 
+.btn:hover{
+  background-color: #CFEDF2;
+  transition: background-color 0.5s;
+}
+.btn:active{
+  background-color: red;
+}
+
 a:link, a:visited {
   text-decoration: underline;
   color: #CFEDF2;
